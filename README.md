@@ -1,6 +1,6 @@
-<h1>Information Retrieval System<\h1>
+<h1>Information Retrieval System </h1>
 
-<h2>Intro<\h2>
+<h2>Intro</h2>
 This repository contains an Information Rettrieval System developed for a work assignment at the University of Pavia for the Information Retrieval Class by prof. Luigi Santagelo.
 I will use the dataset created by github user EnricoBenedetti in his repository GarfieldRetrieve. In which he goes beyond and performs statistical studies on the dataset. 
 
