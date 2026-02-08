@@ -9,6 +9,8 @@ Plans:
     - The main aspect will be to search comics through text but additionally through text on 
         - Time period
         - By specific vignette text
+    - Currently I plan to use case folding completly and delete hyphens to focus on the retrieving part of the system. 
 
+I do not know if it is a good idea, but i'll try adding first the postings to the dictionary and then computing ALL statistics. 
 
 Additional Comment: This is my first time using java so I do expect this project to not be on the same level as other IRS, however I see it as a great opportunity to inmerse myself in the language. 
