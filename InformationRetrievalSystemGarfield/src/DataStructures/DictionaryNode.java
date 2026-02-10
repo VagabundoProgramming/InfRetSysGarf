@@ -18,10 +18,10 @@ public class DictionaryNode {
 			this.keys[i] = "";
 		for (int i = 0; i < 2*minimumDegree; ++i)
 			this.children[i] = null;
-		System.out.println("Info about this node:");
+		/*System.out.println("Info about this node:");
 		System.out.println("my minimum degree is " + this.minimumDegree);
 		System.out.println("I can store " + this.keys.length + " keys");
-		System.out.println("I can store " + this.children.length + " children");
+		System.out.println("I can store " + this.children.length + " children"); */
 		
 	
 	}
@@ -49,6 +49,8 @@ public class DictionaryNode {
 	
 	public Object[] Search(String k)
 	{
+		for (int i = 0; i < 2*this.minimumDegree-1; ++i) System.out.print(this.keys[i] + " / ");
+		System.out.println("\n---------------------");
 		// Object[0] = BNode
 		// Object[1] = id
 		
@@ -59,7 +61,7 @@ public class DictionaryNode {
 		while (i < this.n && HelperFunctions.StringComp.LT(this.keys[i], k)) // AQUI
 			++i;
 		
-		if (i < this.n && this.keys[i] == k)
+		if (i < this.n && this.keys[i].equals(k))
 		{
 			searchResult[0] = this;
 			searchResult[1] = i;

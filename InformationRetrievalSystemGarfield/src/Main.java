@@ -1,40 +1,37 @@
-import Indexer.Preprocessing;
+import DataStructures.DictionaryNode;
+import DataStructures.DocDict;
+import DataStructures.DocDictNode;
+import DataStructures.PostingList;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
-        //PostingList a = new PostingList();
-  
-        
-        int start = 17130;
-        int finish = 17150;
-        
+        System.out.println("Hello, World!\n");
 
-        Indexer.PorterStemmer.Stem("inference");
-        
-        /*String[] temp = Indexer.DataReader.ExtractLines(start, finish); //Reads lines from start-finish of the dataset and returns them as an array of lists
-        Object[] temp2 = Indexer.Preprocessing.Raw2Pairs(temp); // Given an array of raw lines it resutns the doc id array and the text array
-        
-        int[] docIds = (int[]) temp2[0]; // Importante Acordarse de esto
-        String[] texts = (String[]) temp2[1];
+        //subMain.GroundIndexer();
+        DocDict a = new DocDict(2);
+        a.load("docDict.txt");
+        /*
+        a.insert(1, 1, 1, 1);
+        a.insert(2, 3, 77, 6);
+       
+        a.insert(3, 3, 3, 3);
+        a.insert(4,4,4,4);
+        a.insert(5, 5, 5, 5);
+        a.insert(6,6,6,6);
+        a.insert(7, 7, 7, 7);
+        a.insert(8, 8, 8, 8);
+        a.insert(9,9,9,9);
+        a.insert(11,11,11,11);
+        a.insert(22,22,22,22);
         */
-        /*for(int i = 0; i < docIds.length; ++i){
-            System.out.println(docIds[i] + " | " + texts[i]);
-        } */
-
-        /* 
-        for (int i = 0; i < docIds.length; ++i){
-            String[] tempTok;
-            tempTok = Indexer.Preprocessing.generalTokenizeStrings(texts[i]); // Mirar de hacerlo a tronco para q tire con multiples docs a la vez?
-            System.out.print("Tokens doc " + docIds[i] + " : ");     
-            for (int j = 0; j < tempTok.length; ++j) System.out.print(tempTok[j] + " / ");
-            System.out.println();
-        }
-            */
-
+        a.print();
+        System.out.println();
+        //Object b[] = a.search(2);
+        //int n = (int) b[1];
+        //DocDictNode node = (DocDictNode) b[0];
+        //System.out.println("\n"+node.getUTokens(n));
         
-        
-
+        //a.save("docDict.txt");
 
     }
 }

@@ -39,6 +39,7 @@ public class PorterStemmer {
 
     // Ensures the word ends with a string and the beggining has a module grater than specified value. 
     public static boolean modGTAndEndsWith(String token, String ending, int minModule){
+        if (token.length() <= ending.length()) return false;
         if (!endsWith(token, ending)) return false;
         if (calcModule(token.substring(0, token.length() - ending.length())) > minModule) return true;
         return false;
@@ -66,6 +67,7 @@ public class PorterStemmer {
     }
     
     public static boolean CVCClause(String token){
+        if (token.length() < 3) return false;
         int tokenLen = token.length();
         if (!isVowel(token, tokenLen-3) && isVowel(token, tokenLen-2) && !isVowel(token, tokenLen-1)){
             if (!endsWith(token, "w") && !endsWith(token, "x") && !endsWith(token, "y")) return true;
@@ -98,8 +100,7 @@ public class PorterStemmer {
             else if (endsWith(token, "bl")) token = substituteWith(token, "bl", "ble");
             else if (endsWith(token, "iz")) token = substituteWith(token, "iz", "ize");
             else if (EndDoubleCons(token) && !(endsWith(token, "l") || endsWith(token, "s") || endsWith(token, "z"))){
-                token = token.substring(0, token.length()-1); // TEST
-                System.out.println("DoubleConsEnding");
+                token = token.substring(0, token.length()-1);
             } 
             else if (calcModule(token)==1 && CVCClause(token)) token = token + "e";
         }
@@ -168,6 +169,5 @@ public class PorterStemmer {
 
         return token;
     }
-
 
 }

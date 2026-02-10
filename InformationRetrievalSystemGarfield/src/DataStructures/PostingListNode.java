@@ -4,7 +4,8 @@ public class PostingListNode {
     private int docId;
     private PostingListNode next;
 
-    private int termCount;
+    private int docLen;
+    private int uTermCount;
     private float termFreq;
     private float tf_idf;
     
@@ -30,10 +31,10 @@ public class PostingListNode {
     }
 
     public int getTermCount(){
-        return this.termCount;
+        return this.uTermCount;
     }
-    public void setTermCount(int termCount){
-        this.termCount = termCount;
+    public void setTermCount(int uTermCount){
+        this.uTermCount = uTermCount;
     }
 
     public float getTermFreq(){

@@ -25,7 +25,6 @@ public class PostingList {
             return;
         }
         if (this.SearchKey(docId) != null) return;
-
         if (docId < this.root.getDocId()){
             PostingListNode temp = this.root;
             this.root = new PostingListNode(docId);
@@ -53,9 +52,10 @@ public class PostingList {
 
         PostingListNode temp = this.root;
         while (temp.getNext() != null && temp.getNext().getDocId() < docId) temp = temp.getNext();
+        System.out.println(temp.getDocId());
         if (temp.getNext() == null) return;
         
-        if (temp.getDocId() == docId){
+        if (temp.getNext().getDocId() == docId){
             temp.setNext(temp.getNext().getNext());
         }
     }

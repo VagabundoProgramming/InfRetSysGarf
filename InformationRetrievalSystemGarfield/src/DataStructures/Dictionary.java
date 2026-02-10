@@ -14,6 +14,7 @@ public class Dictionary {
 	
 	public Object[] Search(String k)
 	{
+		System.out.println("Searching for term [ " + k + " ]");
 		return this.root.Search(k);
 	}
 	

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class DataReader {
 
-    public static String[] ExtractLines(int start, int end){
+    public static String[] ExtractLinesRaw(int start, int end){
         if (start > end) return null;
         int totalLines = end-start;
         String output[] = new String[totalLines];
