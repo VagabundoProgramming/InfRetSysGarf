@@ -1,6 +1,7 @@
 package DataStructures;
 
 public class DocDictNode {
+
     private int minimumDegree = 0;
 	private int docID[];
 	private DocDictNode children[];
@@ -17,6 +18,7 @@ public class DocDictNode {
 		this.minimumDegree = minimumDegree;
 		this.docID = new int[2*minimumDegree - 1];
 		this.children = new DocDictNode[2*minimumDegree];
+
         this.docLen = new int[2*minimumDegree - 1];
         this.uTokens = new int[2*minimumDegree - 1];
         this.nVignettes = new int[2*minimumDegree - 1];
@@ -112,12 +114,8 @@ public class DocDictNode {
 			this.docLen[j+1] = this.docLen[j];
 			this.uTokens[j+1] = this.uTokens[j];
 			this.nVignettes[j+1] = this.nVignettes[j];
-			
-			
-			//z.docLen[j+1] = y.docLen[j];
-			//z.uTokens[j+1] = y.uTokens[j];
-			//z.nVignettes[j+1] = y.nVignettes[j];
 		}
+
 		this.docID[j+1] = y.docID[this.minimumDegree - 1];
 		this.docLen[j+1] = y.docLen[this.minimumDegree - 1];
 		this.uTokens[j+1] = y.uTokens[this.minimumDegree - 1];
@@ -131,8 +129,7 @@ public class DocDictNode {
 
 		this.n = this.n + 1;
 		
-		for (j = this.minimumDegree; j < 2*this.minimumDegree-1; ++j)
-		{
+		for (j = this.minimumDegree; j < 2*this.minimumDegree-1; ++j){
 			y.docID[j] = 0;
 			y.children[j] = null;
 			y.docLen[j] = -1;

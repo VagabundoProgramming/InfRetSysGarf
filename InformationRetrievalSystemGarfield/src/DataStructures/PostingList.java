@@ -1,5 +1,7 @@
 package DataStructures;
 
+import java.util.ArrayList;
+
 public class PostingList {
     private PostingListNode root = null;
 
@@ -7,7 +9,7 @@ public class PostingList {
         return;
     }
 
-    public PostingListNode SearchKey(int docId){
+    public PostingListNode search(int docId){
         if (this.root == null) return null;
         PostingListNode temp = this.root;
 
@@ -19,15 +21,15 @@ public class PostingList {
     }
 
     // !! Falta poner los datos obtenidos extras super guays
-    public void AddDoc (int docId){
+    public void add (int docId, int termCount, float termFreq, float tf_idf, ArrayList<Integer> termPos){
         if (this.root == null){
-            this.root = new PostingListNode(docId);
+            this.root = new PostingListNode(docId, termCount, termFreq, tf_idf, termPos);
             return;
         }
-        if (this.SearchKey(docId) != null) return;
+        if (this.search(docId) != null) return;
         if (docId < this.root.getDocId()){
             PostingListNode temp = this.root;
-            this.root = new PostingListNode(docId);
+            this.root = new PostingListNode(docId, termCount, termFreq, tf_idf, termPos);
             this.root.setNext(temp);
             return;
         }
@@ -36,14 +38,38 @@ public class PostingList {
         while (temp.getNext() != null && temp.getNext().getDocId() < docId){
             temp = temp.getNext();
         }
-        PostingListNode new_node = new PostingListNode(docId);
+        PostingListNode new_node = new PostingListNode(docId, termCount, termFreq, tf_idf, termPos);
         new_node.setNext(temp.getNext());
         temp.setNext(new_node);
 
         return;
     }
 
-    public void DeleteDoc(int docId){
+    public void add (int docId, int termCount, float termFreq, ArrayList<Integer> termPos){
+        if (this.root == null){
+            this.root = new PostingListNode(docId, termCount, termFreq, 0, termPos);
+            return;
+        }
+        if (this.search(docId) != null) return;
+        if (docId < this.root.getDocId()){
+            PostingListNode temp = this.root;
+            this.root = new PostingListNode(docId, termCount, termFreq, 0, termPos);
+            this.root.setNext(temp);
+            return;
+        }
+
+        PostingListNode temp = this.root;
+        while (temp.getNext() != null && temp.getNext().getDocId() < docId){
+            temp = temp.getNext();
+        }
+        PostingListNode new_node = new PostingListNode(docId, termCount, termFreq, 0, termPos);
+        new_node.setNext(temp.getNext());
+        temp.setNext(new_node);
+
+        return;
+    }
+
+    public void delete(int docId){
         if (this.root == null) return;
         if (this.root.getDocId() == docId){
             this.root = this.root.getNext();

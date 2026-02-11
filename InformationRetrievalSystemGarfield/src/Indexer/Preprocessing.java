@@ -1,5 +1,9 @@
 package Indexer;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList; 
 
 
@@ -14,7 +18,7 @@ public class Preprocessing {
            rawLine[i] = rawLine[i].substring(12).toLowerCase();
         }
        
-        return new Object[] {docIdArr, rawLine, 1};
+        return new Object[] {docIdArr, rawLine};
     }
 
     // Some words like long can be written as loooong, to avoid muiltiple of these instances, we squish words
@@ -46,6 +50,84 @@ public class Preprocessing {
         String[] output = new String[tokens.size()];
         for (int i = 0; i < tokens.size(); ++i) output[i] = tokens.get(i);
         
+        return output;
+    }
+
+    public static void rawDatasetPreprocess(String rawFilename, String curatedFilename){
+        // Deletes duplicate lines due to long text
+        try (BufferedReader reader = new BufferedReader(new FileReader(Config.Constants.mainpath + "//Dataset//" + rawFilename))){
+            try (FileWriter writer = new FileWriter(Config.Constants.mainpath + "//Dataset/" + curatedFilename)){
+
+                String temp; // CURR LINE
+                String lineHolder = null; // sum oof multiple lines of needed
+                String prevRefID = null;
+                String currID;
+
+                temp = reader.readLine();
+                if (temp != null) currID = temp.substring(0, 9); 
+                else return;
+                
+                while (temp != null){
+                    if (prevRefID != null && prevRefID.equals(currID)){ // IF equal, join curr + prev
+                        temp = lineHolder + temp.substring(11);
+                    } 
+                    else if (lineHolder!= null){
+                        writer.write(lineHolder + "\n");
+                    
+                    } 
+                    lineHolder = temp;
+                    prevRefID = currID;
+                    
+                    temp = reader.readLine();
+                    if (temp != null) currID = temp.substring(0,9);
+                }
+
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+
+
+        } catch (IOException e){
+            System.out.println(e);
+        }
+        return;
+    }
+
+    public static int nUTokens (String [] tokens){
+        ArrayList<String> uTokens = new ArrayList<>();
+        
+        for (int i = 0; i < tokens.length; ++i) {
+            if (!(uTokens.contains(tokens[i]))) uTokens.add(tokens[i]);
+        }
+
+        return uTokens.size();
+    }
+
+    public static int nVignettes(String rawtext){
+        int output = 1;
+
+        for (int i = 0; i < rawtext.length() - 4 ; ++i){
+            if (rawtext.substring(i, i+3).equals(" - ")) output += 1;
+        }
+
+        return output;
+    }
+
+    public static int termCount(String token, String[] tokens){
+        int output = 0;
+
+        for (int i = 0; i < tokens.length; ++i){
+            if (token.equals(tokens[i])) output += 1;
+        }
+        return output;
+    }
+
+    public static ArrayList<Integer> termPos(String token, String[] tokens){
+        ArrayList<Integer> output = new ArrayList<Integer>();
+
+        for (int i = 0; i < tokens.length; ++i){
+            if (token.equals(tokens[i])) output.add(i);
+        }
         return output;
     }
 }

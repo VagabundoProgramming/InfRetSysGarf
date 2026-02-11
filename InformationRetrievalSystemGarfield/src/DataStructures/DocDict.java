@@ -28,7 +28,9 @@ public class DocDict {
 	
 	public boolean insert(int docID, int docLen, int uToknes, int nVignettes)
 	{
-		if (this.search(docID) != null) return false;
+		if (this.search(docID) != null){
+			return false;
+		} 
 		this.nDocuments += 1;
 		if (this.root.isFull())
 		{
@@ -138,5 +140,9 @@ public class DocDict {
 		}
 		
 		return true;
+	}
+
+	public int getNDocuments() {
+		return this.nDocuments;
 	}
 }

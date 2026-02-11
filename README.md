@@ -19,8 +19,14 @@ Additional Comment: This is my first time using java so I do expect this project
 - TO DO
   - Dictionary implementation WITH posting List
   - The algorithm should take the words, add them to the dictionary + some statistics
-  - Just discovered that some comics have two lines for extra info, will think how to handle
+  - Search options
+  - Options to modify the dataset at runtime
+  - Small interface
 
 // Deleted / Modified nodes arent direclty removed from the datastructures, but when saving changes, the saved documents should not include them, when searching additional trees will be used to avoid older versions. Yeah?
 
 Maybe a tree for deletions and one for modifications?
+
+NOTES:
+    - I am aware that I am using the word "term" in reference to tokens in multiple areas of the code, it helps me understand the code. 
+    - If my current computer cannot handle having the dictionary loaded in memory, due to time constraints I will simply limit the dictionary size. 
