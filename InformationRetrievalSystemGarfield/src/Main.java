@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.print.Doc;
 
@@ -24,7 +25,7 @@ public class Main {
         String filename = "garfieldProcessed.txt";
         Dictionary dict = new Dictionary(8);
         DocDict docDict = new DocDict(8);
-
+        
 
         // DocDict (All are Non-Global)
         int docLen;
@@ -33,72 +34,89 @@ public class Main {
 
         // Two steps, first add all base info, 
         // Then add global variables by exploring everything. 
+        int nDocs = 0;
 
-        try {
+        
+        //String[] l = Indexer.Preprocessing.generalTokenizeStrings("Man, I haven't had lasagna in, like, forever. RRRrrrrr - What would you like for dinner? LASAGNA! - Some steamed rice? NO! LASAGNA! - Maybe peas and carrots? l-a-s-a-g-n-a...lasagna! - Or, I could whip up a nice... - Here! Noodles! Onions! Ricotta! Mozzarella! Tomatoes! Sausage! - Or pupapth wathanya. Now you're talking.");
+        /*String[] l = {"zz"};
+        for (int i = 0; i < l.length; ++i){
+            System.out.print(l[i]);
+            System.out.println(" --> " + Indexer.Preprocessing.wordSquishing(Indexer.PorterStemmer.Stem(l[i])));
+        }*/
+        //System.out.println(Indexer.Preprocessing.generalTokenizeStrings("I eat too much, I sleep too much and I don't exercise at all. - There's certainly room for improvement. - I think I'll take up smoking."));
+        //TimeUnit.SECONDS.sleep(100500);
+        
+        
+        
+        
+        try { 
             BufferedReader reader = new BufferedReader (new FileReader(Constants.mainpath + "//Dataset//" + filename));
             
             String datasetLine = reader.readLine();
             int docID;
 
             String[] tokens;
-            int nDocs = 0;
-            
-
-
-            // Dictionary Node has ALL global variables
-
-            // DictNode non-global (all except tf_idf)
             int termCount;
             float termFreq;
             ArrayList<Integer> termPos;
 
-
             int i;
-            while (datasetLine != null && nDocs < 20){ // Read Doc 1 by 1.
+            while (datasetLine != null){ // Read Doc 1 by 1.
                 docID = Integer.parseInt(datasetLine.substring(2,8));
-                datasetLine = datasetLine.substring(12).toLowerCase();
+                System.out.print(docID+" ");
+                if (datasetLine.length() > 11)
+                    datasetLine = datasetLine.substring(12).toLowerCase();
 
                 tokens = Indexer.Preprocessing.generalTokenizeStrings(datasetLine);
                 
+                //processedTokens = new String[tokens.length];
+                for (i = 0; i < tokens.length; i++){
+                    tokens[i] = Indexer.PorterStemmer.Stem(Indexer.Preprocessing.wordSquishing(tokens[i]));
+                }
+
                 // DocDict 
                 docLen = tokens.length;
                 nUTokens = Preprocessing.nUTokens(tokens);
                 nVignettes = Preprocessing.nVignettes(datasetLine);
+                docDict.insert(docID, docLen, nUTokens, nVignettes); // HECHO
 
-                docDict.insert(docID, docLen, docID, nVignettes); // HECHO
 
                 for (i = 0; i < tokens.length; ++i){ // For each token in the doc
                     // Crear el termino en el diccionario
-                     // Simplemente añadir un posting node en vez de todo. 
-                    
                     termCount = Indexer.Preprocessing.termCount(tokens[i], tokens);
-                    termFreq = termCount / docLen;
+                    termFreq = (float) termCount / docLen;
                     termPos = Indexer.Preprocessing.termPos(tokens[i], tokens);
-                    
+
                     // Añadir nodo al diccionario SIN datos globales (LUEGO)
                     dict.Add(tokens[i], 0, 0); 
 
                     // Añadir a la posting list del diccionario
-                    dict.Add2Posting(tokens[i], docID, termCount, termFreq, termPos);
+                    dict.Add2Posting(tokens[i], docID, termCount, termFreq, termPos); // DOES not add tf_idf
                 }
 
                 datasetLine = reader.readLine();
                 nDocs += 1;
             }
 
-            
-            dict.Print();
-            System.out.println("\n\n");
-            dict.getPostings("the").Print(); 
-
-            System.out.println(dict.getnTerms()); // Funciona
-
-
-
+            docDict.save("docDict.txt"); // Does not require global variables
+            reader.close();
 
         } catch (IOException e) {
             System.out.println(e);
         }
+
+        /*dict.Print();
+        System.out.println("\n\n");
+        String token = "garfield";
+        System.out.println("The token [ " + token + " ] is found in the following docIDs:");
+        dict.getPostings(token).Print(); 
+        */
+        
+        // Ahora datos globales
+        dict.setGlobalStatistics(nDocs);
+
+
+        dict.save("mainDictionary.txt");
         
 
 

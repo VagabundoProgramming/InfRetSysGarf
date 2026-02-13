@@ -2941,7 +2941,6 @@ ga851219 -- You may not know this, Garfield, but I'm somewhat of an expert at re
 ga851219 -- cocoa back?
 ga851220 -- Garfield, do you want your eggs beaten? Yeah. - And while you're at it, squeeze the orange juice. - Then choke some toast And mangle the bacon! I'm worried about that boy.
 ga851221 -- PURRRRRR, purr, purr. - - Actios speak louder than purrs.
-------------------------------------
 ga851222 -- slurp! - - poo - - poo - poo - I spit out the hole.
 ga851223 -- WHA?! - Let me guess. It's time to trim the Christmas tree, right? - You must be psychic.
 ga851224 -- Come on, Odie. The sooner we go to bed, the sooner it will be Christmas morning. pat pat pat - Christmas eve is the longest night of the year. - I imagine it would be shorter if we could ever fall asleep.
@@ -6584,7 +6583,7 @@ ga950426 -- Garfield... - Did you drop this bowling ball? - Me?
 ga950427 -- BOOT! - - In case you were wondering, the paint's not dry yet.
 ga950428 -- The news is too depressing. - So tonight I'll read a comic book instead! - Zombies from Venus are invading earth? - Film at eleven.
 ga950429 -- Hmmm. Interesting lettuce. - - There's a phrase you don't hear every day.
- ga950430 -- - wrap wrap wrap wrap - YAWK spinnn - spinnnnnnn - spinnnnnn - *** - HURK! GARFIELD!
+ga950430 -- - wrap wrap wrap wrap - YAWK spinnn - spinnnnnnn - spinnnnnn - *** - HURK! GARFIELD!
 ga950501 -- I'm tired. - Not only can't I hold my eyes open... - I can barely hold someone else's eyes open.
 ga950502 -- - - I'm hiding from Odie.
 ga950503 -- Do not take the lid off this jar! - - I took the jar off the lid!
@@ -14782,7 +14781,7 @@ ga161123 -- You're going to regret joining me up here, Odie. - What are you goin
 ga161124 -- Yesterday I saw some cats in that new dumpster behind Al's Fish Market. - The smell would curl your whiskers. - It's on 12th street. Wanna go? Absolutely!
 ga161125 -- STEAK! - KLOK! - It's still frozen, Garfield! I can wait.
 ga161126 -- - DOG PARK - And all the rest belongs to cats!
-ga161127 -- tic tic tic tic tic - Watch this. - Username: ********* Password: ÜÜÜÜÜÜÜÜÜÜ - *** **** !!! - WELCOME BACK, JON ARBUCKLE, Royal Platinum Level frequent customer! - How may we serve you today, your Royal Platinum Highness? Wow. - I didn't know
+ga161127 -- tic tic tic tic tic - Watch this. - Username: ********* Password: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ - *** **** !!! - WELCOME BACK, JON ARBUCKLE, Royal Platinum Level frequent customer! - How may we serve you today, your Royal Platinum Highness? Wow. - I didn't know
 ga161127 -- pizza parlors had a royal platinum level. They created it just for us.
 ga161128 -- I've been tossing and turning all night. - I just cannot get to sleep. - Time to get a more comfortable owner.
 ga161129 -- Fetch the can opener, Odie! - Wha?!!... - Well, TECHNICALLY you're right.
@@ -15216,7 +15215,7 @@ ga180113 -- I forgot Liz's birthday! - Not to worry, Jon. - Where are you going?
 ga180114 -- - -> - <- - -> - <- - -> <- Fun with rule followers.
 ga180115 -- Are you going to sleep all day? All in favor? - - Z
 ga180116 -- Garfield... - I know it's cold out today, but... - What if someone else wants hot chocolate? Then they should be me.
-ga180117 -- Time to start off into space. - Odie! - ItÄs cheating if you're actually looking at something.
+ga180117 -- Time to start off into space. - Odie! - Itï¿½s cheating if you're actually looking at something.
 ga180118 -- This will be our first anniversary without my husband, Walter. - It must be hard for you. I'm so sorry, Agnes. Thanks, Helen. - What happened to Walter, anyway? I ate him.
 ga180119 -- Let's go shoe shopping! Or... - - Shoe shopping it is! Wise choice.
 ga180120 -- GOOD HEALTH --> - <-- DONUTS -

@@ -78,12 +78,23 @@ public class PostingList {
 
         PostingListNode temp = this.root;
         while (temp.getNext() != null && temp.getNext().getDocId() < docId) temp = temp.getNext();
-        System.out.println(temp.getDocId());
         if (temp.getNext() == null) return;
         
         if (temp.getNext().getDocId() == docId){
             temp.setNext(temp.getNext().getNext());
         }
+    }
+
+    public int lenght(){
+        if (this.root == null) return 0;
+        int output = 1;
+
+        PostingListNode temp = this.root;
+        while (temp.getNext() != null){
+            temp = temp.getNext();
+            output+=1;
+        } 
+        return output;
     }
 
     public void Print(){
@@ -96,6 +107,10 @@ public class PostingList {
 		} 
 		System.out.print(temp.getDocId() + "\n");
         return;
+    }
+
+    public PostingListNode getRoot() {
+        return this.root;
     }
     
 }

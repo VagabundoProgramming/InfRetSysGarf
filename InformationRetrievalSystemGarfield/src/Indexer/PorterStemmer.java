@@ -4,6 +4,7 @@ public class PorterStemmer {
     // It takes Y after a consonant as a vowel. It has weird things with YYYY, but that is not a real word.
 
     public static int calcModule(String token){
+        if (token.length() == 0) return 0;
         String temp = "";
         char lastAdded = ' ';
         for (int i = 0; i < token.length(); ++i){
@@ -106,7 +107,7 @@ public class PorterStemmer {
         }
 
         // Step 1c
-        if (VowelIn(token.substring(0, token.length()-1)) && token.charAt(token.length()-1) == 'y') token = substituteWith(token, "y", "i");
+        if (token.length() > 1 && VowelIn(token.substring(0, token.length()-1)) && token.charAt(token.length()-1) == 'y') token = substituteWith(token, "y", "i");
 
         // Step 2
         if      (modGTAndEndsWith(token, "ational", 0)) token = substituteWith(token, "ational", "ate");
@@ -147,7 +148,7 @@ public class PorterStemmer {
         else if (modGTAndEndsWith(token, "able", 1))  token = substituteWith(token, "able", "");
         else if (modGTAndEndsWith(token, "ible", 1))  token = substituteWith(token, "ible", "");
         else if (modGTAndEndsWith(token, "ant", 1))   token = substituteWith(token, "ant", "");
-        else if (modGTAndEndsWith(token, "ement", 1)) token = substituteWith(token, "e,emt", "");
+        else if (modGTAndEndsWith(token, "ement", 1)) token = substituteWith(token, "ement", "");
         else if (modGTAndEndsWith(token, "ment", 1))  token = substituteWith(token, "ment", "");
         else if (modGTAndEndsWith(token, "ent", 1))   token = substituteWith(token, "ent", "");
         else if (modGTAndEndsWith(token, "sion", 1))  token = substituteWith(token, "sion", "s"); // Simpler 

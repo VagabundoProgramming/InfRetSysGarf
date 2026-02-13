@@ -3,11 +3,11 @@ package DataStructures;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOError;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Stack;
+
+import Config.Constants;
+import Indexer.Preprocessing;
 
 public class DocDict {
     private int minimumDegree = 0;
@@ -34,7 +34,6 @@ public class DocDict {
 		this.nDocuments += 1;
 		if (this.root.isFull())
 		{
-			System.out.print("DocDict Root Full");
 			DocDictNode s = new DocDictNode(this.minimumDegree);
 			s.setChild(this.root, 0);
 			this.root = s;
@@ -54,7 +53,7 @@ public class DocDict {
 			writer.write(Integer.toString(nDocuments) + "\n");
 			
 			Stack <DocDictNode> nodeStack = new Stack<DocDictNode>();
-			Stack <Integer> pointerStack = new Stack <Integer>();
+			Stack <Integer> pointerStack = new Stack<Integer>();
 			nodeStack.add(this.root);
 			pointerStack.add(0);
 			while (!nodeStack.isEmpty()){ 
@@ -76,6 +75,7 @@ public class DocDict {
 				}
 				else if (index % 2 == 1 && curr.getDocId(index/2) != 0){ // Do compute on keys
 					writer.write(curr.getDocId(index/2) + ";" + curr.getDocLen(index/2) + ";" + curr.getUTokens(index/2) + ";" + curr.getNVignettes(index/2) + ";\n");
+					
 					pointerStack.pop();
 					pointerStack.add(index+1);
 				}
@@ -100,7 +100,7 @@ public class DocDict {
 		return;
 	}
 
-	public boolean load(String filename){
+	public boolean loadFromIndex(String filename){
 		if (this.root == null) return false;
 		try (BufferedReader reader = new BufferedReader(new FileReader(Config.Constants.mainpath + "//InformationRetrievalSystemGarfield//indexes//" + filename))){ 
 			String tempString;
@@ -116,18 +116,13 @@ public class DocDict {
 				char separator = ';';
 
 				for (int j = 0; j < tempString.length(); ++j){
-					System.out.println("Do i explode here?");
-					System.out.println(tempString.charAt(j));
 					if (!(separator == (tempString.charAt(j))))
 						tempInt += tempInt * 10 + Integer.parseInt(tempString.substring(j, j+1));
 					else{
-						System.out.println("Adding the " + i + " th value");
 						temp[i] = tempInt;
 						tempInt = 0;
 						i += 1;
 					}
-					
-					System.out.println("Yass");
 				}
 				insert(temp[0], temp[1], temp[2], temp[3]);
 				tempString = reader.readLine();
@@ -140,6 +135,53 @@ public class DocDict {
 		}
 		
 		return true;
+	}
+
+	public void loadFromDataset(String filename){
+		
+		// DocDict (All are Non-Global)
+        int docLen;
+        int nUTokens;
+        int nVignettes;
+
+		try { 
+            BufferedReader reader = new BufferedReader (new FileReader(Constants.mainpath + "//Dataset//" + filename));
+            
+            String datasetLine = reader.readLine();
+            int docID;
+
+            String[] tokens;
+            
+            int i;
+            while (datasetLine != null){ // Read Doc 1 by 1.
+                docID = Integer.parseInt(datasetLine.substring(2,8));
+                System.out.print(docID+" ");
+                if (datasetLine.length() > 11)
+                    datasetLine = datasetLine.substring(12).toLowerCase();
+
+                tokens = Indexer.Preprocessing.generalTokenizeStrings(datasetLine);
+                
+                //processedTokens = new String[tokens.length];
+                for (i = 0; i < tokens.length; i++){
+                    tokens[i] = Indexer.PorterStemmer.Stem(Indexer.Preprocessing.wordSquishing(tokens[i]));
+                }
+
+                // DocDict 
+                docLen = tokens.length;
+                nUTokens = Preprocessing.nUTokens(tokens);
+                nVignettes = Preprocessing.nVignettes(datasetLine);
+                this.insert(docID, docLen, nUTokens, nVignettes); // HECHO
+
+
+                datasetLine = reader.readLine();
+            }
+	    reader.close();
+
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+
 	}
 
 	public int getNDocuments() {

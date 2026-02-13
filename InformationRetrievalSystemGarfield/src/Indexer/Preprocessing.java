@@ -42,7 +42,8 @@ public class Preprocessing {
         
         String holder = "";
         for(int c = 0; c < rawText.length(); ++c){
-            if (!"".equals(holder) && (rawText.charAt(c) == ' ' || rawText.charAt(c) == '-')){
+            //if (!"".equals(holder) && isLetter(rawText.charAt(c) == ' ' || rawText.charAt(c) == '-')){
+            if (!"".equals(holder) && !Character.isLetter(rawText.charAt(c))){
                 tokens.add(holder);
                 holder = "";
             } else if (Character.isLetter(rawText.charAt(c))) holder+=rawText.charAt(c);            
@@ -52,6 +53,7 @@ public class Preprocessing {
         
         return output;
     }
+
 
     public static void rawDatasetPreprocess(String rawFilename, String curatedFilename){
         // Deletes duplicate lines due to long text
@@ -130,7 +132,25 @@ public class Preprocessing {
         }
         return output;
     }
+
+    /*public static void createMainDictIndex(String datafile, String indexfile){
+        try (BufferedReader reader = new BufferedReader(new FileReader(Config.Constants.mainpath + "//Dataset//" + datafile))){
+            try (FileWriter writer = new FileWriter(Config.Constants.mainpath + "//InformationRetrievalSystemGarfield//indexes//" + indexfile)){
+                // COment
+                a
+
+
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        } catch (IOException e){
+            System.out.println(e);
+        } 
+        return;
+    }*/
 }
+
+
     
 
     

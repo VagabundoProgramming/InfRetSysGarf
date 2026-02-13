@@ -233,10 +233,10 @@ public class DictionaryNode {
 	}
 
 	public String[] getTerms() {
-		return terms;
+		return this.terms;
 	}
 	public String getTerms(int i) {
-		return terms[i];
+		return this.terms[i];
 	}
 	public void setTerms(String[] terms) {
 		this.terms = terms;
@@ -280,8 +280,8 @@ public class DictionaryNode {
 	public void setDocFreq(float[] docFreq) {
 		this.docFreq = docFreq;
 	}
-	public void setTermFreq (float termFreq, int i){
-		this.docFreq[i] = termFreq;
+	public void setDocFreq (float docFreq, int i){
+		this.docFreq[i] = docFreq;
 	}
 
 	public float[] getIdf() {

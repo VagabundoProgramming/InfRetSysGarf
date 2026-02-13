@@ -51,7 +51,7 @@ public class subMain {
 
     public static void DocDict(){
         DocDict a = new DocDict(2);
-        a.load("docDict.txt");
+        a.loadFromIndex("docDict.txt");
 
         a.print();
         
