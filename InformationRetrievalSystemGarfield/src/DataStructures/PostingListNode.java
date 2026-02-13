@@ -21,7 +21,6 @@ public class PostingListNode {
         this.tf_idf = tf_idf;
         this.termPos = termPos;
         this.next = null;
-
     }
 
     public int getDocId(){

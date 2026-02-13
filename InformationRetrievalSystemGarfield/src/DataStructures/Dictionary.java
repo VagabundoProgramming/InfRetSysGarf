@@ -45,13 +45,15 @@ public class Dictionary {
 		return this.root.InsertOnNonFullNode(term, docFreq, idf);
 	}
 
-	public void Add2Posting(String term, int docId, int termCount, float termFreq, ArrayList<Integer> termPos){
+	public void Add2Posting(String term, int docId, int termCount, float termFreq, float tf_idf, ArrayList<Integer> termPos){
+		
 		Object [] searchResult = this.root.Search(term);
 		if (searchResult == null) return;
+		
 		int index = (int) searchResult[1];
         DictionaryNode tempNode = (DictionaryNode) searchResult[0];
         
-		tempNode.getPostings(index).add(docId, termCount, termFreq, termPos);
+		tempNode.getPostings(index).add(docId, termCount, termFreq, tf_idf, termPos);
 		return;
 	}
 
@@ -236,8 +238,7 @@ public class Dictionary {
 			docIndex += Float.toString(idf).length() + 3;
 
 			this.Add(term, docFreq, idf);
-
-			while(docIndex < tempString.length()-5){
+			while(docIndex < tempString.length()-4){
 				docId = Integer.parseInt(readVal(tempString, docIndex));
 				docIndex += Integer.toString(docId).length() + 1;
 
@@ -251,19 +252,23 @@ public class Dictionary {
 				docIndex += Float.toString(tf_idf).length() + 2;
 
 				termPos = new ArrayList<Integer>();
+
 				while (tempString.charAt(docIndex) != ']'){
 					tempChar = tempString.charAt(docIndex);
 					if (Character.isDigit(tempChar)){
 						tempInt = tempInt * 10 + (tempChar - '0');
 					} else {
-						termPos.add(tempInt);
+						if (tempChar != ' ')
+							termPos.add(tempInt);
 						tempInt = 0;
 					}
 					docIndex += 1;
 				}
 				termPos.add(tempInt);
 
-				this.Add2Posting(term, docIndex, docIndex, tf_idf, termPos);
+				this.Add2Posting(term, docId, termCount, termFreq, tf_idf, termPos);
+				docIndex += 4; // Space between end of relevant data of a posting and the next
+
 			}
 			tempString = reader.readLine();
 		}
@@ -274,10 +279,6 @@ public class Dictionary {
 	}
 
 	public void loadFromDataset(String datafile){
-		if (this.root != null){
-			System.out.println("To load ensure that the dictionary is empty!");
-			return;
-		}
 
 		int nDocs = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(Config.Constants.mainpath + "//Dataset//" + datafile))){
@@ -288,8 +289,6 @@ public class Dictionary {
 			//int nUTokens;
 			//int nVignettes;
 
-			
-
             String[] tokens;
             int termCount;
             float termFreq;
@@ -298,7 +297,7 @@ public class Dictionary {
             int i;
 			while (datasetLine != null){ // Read Doc 1 by 1.
                 docID = Integer.parseInt(datasetLine.substring(2,8));
-                System.out.print(docID+" ");
+                //System.out.print(docID+" ");
                 if (datasetLine.length() > 11)
                     datasetLine = datasetLine.substring(12).toLowerCase();
 
@@ -326,7 +325,7 @@ public class Dictionary {
                     this.Add(tokens[i], 0, 0); 
 
                     // Añadir a la posting list del diccionario
-                    this.Add2Posting(tokens[i], docID, termCount, termFreq, termPos); // DOES not add tf_idf
+                    this.Add2Posting(tokens[i], docID, termCount, termFreq, 0, termPos); // DOES not add tf_idf
                 }
 
                 datasetLine = reader.readLine();

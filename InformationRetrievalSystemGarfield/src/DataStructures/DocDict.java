@@ -155,7 +155,7 @@ public class DocDict {
             int i;
             while (datasetLine != null){ // Read Doc 1 by 1.
                 docID = Integer.parseInt(datasetLine.substring(2,8));
-                System.out.print(docID+" ");
+                //System.out.print(docID+" ");
                 if (datasetLine.length() > 11)
                     datasetLine = datasetLine.substring(12).toLowerCase();
 

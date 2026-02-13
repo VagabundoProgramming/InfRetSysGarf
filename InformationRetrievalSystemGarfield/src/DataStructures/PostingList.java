@@ -33,7 +33,6 @@ public class PostingList {
             this.root.setNext(temp);
             return;
         }
-
         PostingListNode temp = this.root;
         while (temp.getNext() != null && temp.getNext().getDocId() < docId){
             temp = temp.getNext();
@@ -45,15 +44,16 @@ public class PostingList {
         return;
     }
 
-    public void add (int docId, int termCount, float termFreq, ArrayList<Integer> termPos){
+    /* 
+    public void add (int docId, int termCount, float termFreq, float tf_idf, ArrayList<Integer> termPos){
         if (this.root == null){
-            this.root = new PostingListNode(docId, termCount, termFreq, 0, termPos);
+            this.root = new PostingListNode(docId, termCount, termFreq, tf_idf, termPos);
             return;
         }
         if (this.search(docId) != null) return;
         if (docId < this.root.getDocId()){
             PostingListNode temp = this.root;
-            this.root = new PostingListNode(docId, termCount, termFreq, 0, termPos);
+            this.root = new PostingListNode(docId, termCount, termFreq, tf_idf, termPos);
             this.root.setNext(temp);
             return;
         }
@@ -62,12 +62,12 @@ public class PostingList {
         while (temp.getNext() != null && temp.getNext().getDocId() < docId){
             temp = temp.getNext();
         }
-        PostingListNode new_node = new PostingListNode(docId, termCount, termFreq, 0, termPos);
+        PostingListNode new_node = new PostingListNode(docId, termCount, termFreq, tf_idf, termPos);
         new_node.setNext(temp.getNext());
         temp.setNext(new_node);
 
         return;
-    }
+    }*/
 
     public void delete(int docId){
         if (this.root == null) return;

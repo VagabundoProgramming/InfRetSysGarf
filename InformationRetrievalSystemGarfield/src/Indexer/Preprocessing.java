@@ -132,22 +132,6 @@ public class Preprocessing {
         }
         return output;
     }
-
-    /*public static void createMainDictIndex(String datafile, String indexfile){
-        try (BufferedReader reader = new BufferedReader(new FileReader(Config.Constants.mainpath + "//Dataset//" + datafile))){
-            try (FileWriter writer = new FileWriter(Config.Constants.mainpath + "//InformationRetrievalSystemGarfield//indexes//" + indexfile)){
-                // COment
-                a
-
-
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-        } catch (IOException e){
-            System.out.println(e);
-        } 
-        return;
-    }*/
 }
 
 
