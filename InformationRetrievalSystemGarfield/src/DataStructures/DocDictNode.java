@@ -6,12 +6,13 @@ public class DocDictNode {
 	private int docID[];
 	private DocDictNode children[];
 	private boolean leaf = false;
-	private int n = 0; // Fuckign hate you
+	private int n = 0; 
 
     //Statistics
     private int docLen[];
     private int uTokens[];
     private int nVignettes[];
+	private String text[];
 	
 	public DocDictNode(int minimumDegree)
 	{
@@ -22,6 +23,7 @@ public class DocDictNode {
         this.docLen = new int[2*minimumDegree - 1];
         this.uTokens = new int[2*minimumDegree - 1];
         this.nVignettes = new int[2*minimumDegree - 1];
+		this.text = new String[2*minimumDegree  -1];
 
 		
 		for (int i = 0; i < 2*minimumDegree - 1; ++i){
@@ -29,6 +31,7 @@ public class DocDictNode {
             this.docLen[i] = -1; // Important since some comics can just have 0 words
             this.uTokens[i] = -1;
             this.nVignettes[i] = -1;
+			this.text[i] = "";
 		}
 		for (int i = 0; i < 2*minimumDegree; ++i)
 			this.children[i] = null;
@@ -99,6 +102,7 @@ public class DocDictNode {
 			z.docLen[j] = y.docLen[j + this.minimumDegree];
 			z.uTokens[j] = y.uTokens[j + this.minimumDegree];
 			z.nVignettes[j] = y.nVignettes[j + this.minimumDegree];
+			z.text[j] = y.text[j + this.minimumDegree];
 		}
 		for (j = 0; j < this.minimumDegree; ++j)
 			z.children[j] = y.children[j + this.minimumDegree];
@@ -114,18 +118,20 @@ public class DocDictNode {
 			this.docLen[j+1] = this.docLen[j];
 			this.uTokens[j+1] = this.uTokens[j];
 			this.nVignettes[j+1] = this.nVignettes[j];
+			this.text[j+1] = this.text[j];
 		}
 
 		this.docID[j+1] = y.docID[this.minimumDegree - 1];
 		this.docLen[j+1] = y.docLen[this.minimumDegree - 1];
 		this.uTokens[j+1] = y.uTokens[this.minimumDegree - 1];
 		this.nVignettes[j+1] = y.nVignettes[this.minimumDegree - 1];
+		this.text[j+1] = y.text[this.minimumDegree - 1];
 		
 		this.docID[i] = y.docID[this.minimumDegree - 1];
 		this.docLen[i] = y.docLen[this.minimumDegree - 1];
 		this.uTokens[i] = y.uTokens[this.minimumDegree - 1];
 		this.nVignettes[i] = y.nVignettes[this.minimumDegree - 1];
-
+		this.text[i] = y.text[this.minimumDegree - 1];
 
 		this.n = this.n + 1;
 		
@@ -135,13 +141,14 @@ public class DocDictNode {
 			y.docLen[j] = -1;
             y.uTokens[j] = -1;
             y.nVignettes[j] = -1;
+			y.text[j] = "";
 		}
 		y.docID[this.minimumDegree - 1] = 0;
 		// Quiza hace falta algo aqui, pero no estoy seguro
 		y.children[j] = null;
 	}
 	
-	public boolean insertOnNonFullNode(int ID, int docLen, int uTokens, int nVignettes)
+	public boolean insertOnNonFullNode(int ID, int docLen, int uTokens, int nVignettes, String text)
 	{
 		if(this.isFull()) return false;
 		
@@ -155,12 +162,14 @@ public class DocDictNode {
 				this.docLen[i+1] = this.docLen[i];
 				this.uTokens[i+1] = this.uTokens[i];
 				this.nVignettes[i+1] = this.nVignettes[i];
+				this.text[i+1] = this.text[i];
 				--i;
 			}
 			this.docID[i+1] = ID;
 			this.docLen[i+1] = docLen;
 			this.uTokens[i+1] = uTokens;
-			this. nVignettes[i+1] = nVignettes;
+			this.nVignettes[i+1] = nVignettes;
+			this.text[i+1] = text;
 			this.n = this.n + 1;
 			return true;
 		}
@@ -177,7 +186,7 @@ public class DocDictNode {
 				if (ID > this.docID[i]) ++i;
 			}
 			
-			return this.children[i].insertOnNonFullNode(ID, docLen, uTokens, nVignettes);
+			return this.children[i].insertOnNonFullNode(ID, docLen, uTokens, nVignettes, text);
 		}
 	}
 
@@ -190,54 +199,92 @@ public class DocDictNode {
 		{
 			if (this.children[i] != null)
 				this.children[i].print();
-			System.out.println(this.docID[i] + " " + this.docLen[i]  + " " + this.uTokens[i] + " " + this.nVignettes[i]);
+			System.out.println(this.docID[i] + " " + this.docLen[i]  + " " + this.uTokens[i] + " " + this.nVignettes[i] + " " + this.text[i]);
 		}
 		if (this.children[i] != null)
 			this.children[i].print();
 	}
 
+
+	public int[] getUTokens() {
+		return this.uTokens;
+	}
 	public int getUTokens(int i){
 		return this.uTokens[i];
 	}
-
+	public void setuTokens(int[] uTokens) {
+		this.uTokens = uTokens;
+	}
+	public void setuTokens(int uTokens, int i) {
+		this.uTokens[i] = uTokens;
+	}
 
 	public DocDictNode[] getChildren(){
 		return this.children;
 	}
-	
 	public DocDictNode getChildren(int i){
 		return this.children[i];
+	}
+	public void setChildren(DocDictNode[] children) {
+		this.children = children;
+	}
+	public void setChildren(DocDictNode children, int i) {
+		this.children[i] = children;
 	}
 
 	public int[] getDocId(){
 		return this.docID;
 	}
-
 	public int getDocId(int i){
 		return this.docID[i];
+	}
+	public void setDocID(int[] docID) {
+		this.docID = docID;
+	}
+	public void setDocID(int docID, int i) {
+		this.docID[i] = docID;
 	}
 
 	public int[] getDocLen(){
 		return this.docLen;
 	}
-
 	public int getDocLen(int i){
 		return this.docLen[i];
 	}
-
-	public int[] getUToknes(){
-		return this.uTokens;
+	public void setDocLen(int[] docLen) {
+		this.docLen = docLen;
 	}
-
-	public int getUToknes(int i){
-		return this.uTokens[i];
+	public void setDocLen(int docLen, int i) {
+		this.docLen[i] = docLen;
 	}
 
 	public int[] getNVignettes(){
 		return this.nVignettes;
 	}
-
 	public int getNVignettes(int i){
 		return this.nVignettes[i];
+	}
+	public void setNVignettes(int[] nVignettes) {
+		this.nVignettes = nVignettes;
+	}
+	public void setNVignettes(int nVignettes, int i) {
+		this.nVignettes[i] = nVignettes; 
+	}
+
+	public String[] getText() {
+		return this.text;
+	}
+	public String getText(int i) {
+		return this.text[i];
+	}
+	public void setText(String[] text) {
+		this.text = text;
+	}
+	public void setText(String text, int i) {
+		this.text[i] = text;
+	}
+
+	public int getN() {
+		return n;
 	}
 }

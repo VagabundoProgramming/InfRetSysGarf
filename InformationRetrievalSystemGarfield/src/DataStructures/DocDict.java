@@ -26,7 +26,7 @@ public class DocDict {
 		return this.root.search(docID);
 	}
 	
-	public boolean insert(int docID, int docLen, int uToknes, int nVignettes)
+	public boolean insert(int docID, int docLen, int uToknes, int nVignettes, String text)
 	{
 		if (this.search(docID) != null){
 			return false;
@@ -38,7 +38,7 @@ public class DocDict {
 			s.setChild(this.root, 0);
 			this.root = s;
 		}
-		return this.root.insertOnNonFullNode(docID, docLen, uToknes, nVignettes);
+		return this.root.insertOnNonFullNode(docID, docLen, uToknes, nVignettes, text);
 	}
 	
 	public void print()
@@ -74,7 +74,7 @@ public class DocDict {
 
 				}
 				else if (index % 2 == 1 && curr.getDocId(index/2) != 0){ // Do compute on keys
-					writer.write(curr.getDocId(index/2) + ";" + curr.getDocLen(index/2) + ";" + curr.getUTokens(index/2) + ";" + curr.getNVignettes(index/2) + ";\n");
+					writer.write(curr.getDocId(index/2) + ";" + curr.getDocLen(index/2) + ";" + curr.getUTokens(index/2) + ";" + curr.getNVignettes(index/2) + ";" + curr.getText(index/2) + ";\n");
 					
 					pointerStack.pop();
 					pointerStack.add(index+1);
@@ -105,26 +105,38 @@ public class DocDict {
 		try (BufferedReader reader = new BufferedReader(new FileReader(Config.Constants.mainpath + "//InformationRetrievalSystemGarfield//indexes//" + filename))){ 
 			String tempString;
 			int tempInt = 0;
-			
+			int temp[] = {0,0,0,0};  // docID, docLen, uTokens, nVignettes
+			String text;
+			int i;
+			int j;
+			char separator = ';';
+
 			tempString = reader.readLine();
 			this.nDocuments = Integer.parseInt(tempString);
 
 			tempString = reader.readLine();
 			while (tempString != null){
-				int temp[] = {0,0,0,0}; // docID, docLen, uTokens, nVignettes
-				int i = 0;
-				char separator = ';';
 
-				for (int j = 0; j < tempString.length(); ++j){
-					if (!(separator == (tempString.charAt(j))))
-						tempInt += tempInt * 10 + Integer.parseInt(tempString.substring(j, j+1));
-					else{
-						temp[i] = tempInt;
-						tempInt = 0;
-						i += 1;
+				text = "";
+				for (j = 0;j < 4; ++j) temp[j] = 0;
+				
+				i = 0;
+				for (j = 0; j < tempString.length(); ++j){
+					if (i < 4){
+						if (!(separator == (tempString.charAt(j))))
+							tempInt += tempInt * 10 + Integer.parseInt(tempString.substring(j, j+1));
+						else{
+							temp[i] = tempInt;
+							tempInt = 0;
+							i += 1;
+						}
+					} else {
+						if (!(separator == (tempString.charAt(j))))
+							text = text + tempString.charAt(j);
+
 					}
 				}
-				insert(temp[0], temp[1], temp[2], temp[3]);
+				insert(temp[0], temp[1], temp[2], temp[3], text);
 				tempString = reader.readLine();
 			}
 
@@ -143,23 +155,25 @@ public class DocDict {
         int docLen;
         int nUTokens;
         int nVignettes;
+		int docID;
+		String text;
 
 		try { 
             BufferedReader reader = new BufferedReader (new FileReader(Constants.mainpath + "//Dataset//" + filename));
             
             String datasetLine = reader.readLine();
-            int docID;
+            
 
             String[] tokens;
             
             int i;
             while (datasetLine != null){ // Read Doc 1 by 1.
                 docID = Integer.parseInt(datasetLine.substring(2,8));
-                //System.out.print(docID+" ");
-                if (datasetLine.length() > 11)
-                    datasetLine = datasetLine.substring(12).toLowerCase();
+				if (datasetLine.length() > 11)
+                    text = datasetLine.substring(12).toLowerCase();
+				else text = "";
 
-                tokens = Indexer.Preprocessing.generalTokenizeStrings(datasetLine);
+                tokens = Indexer.Preprocessing.generalTokenizeStrings(text);
                 
                 //processedTokens = new String[tokens.length];
                 for (i = 0; i < tokens.length; i++){
@@ -169,8 +183,8 @@ public class DocDict {
                 // DocDict 
                 docLen = tokens.length;
                 nUTokens = Preprocessing.nUTokens(tokens);
-                nVignettes = Preprocessing.nVignettes(datasetLine);
-                this.insert(docID, docLen, nUTokens, nVignettes); // HECHO
+                nVignettes = Preprocessing.nVignettes(text);
+                this.insert(docID, docLen, nUTokens, nVignettes, text); // HECHO
 
 
                 datasetLine = reader.readLine();
