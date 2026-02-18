@@ -135,5 +135,14 @@ public class MaxHeap {
     public ArrayList<Float> getScore() {
         return this.score;
     }
+
+    public void empty(){
+        this.docIDs = new ArrayList<Integer>();
+        this.score = new ArrayList<Float>();
+
+        this.docIDs.add(null);
+        this.score.add(null);
+        return;
+    }
 }
         

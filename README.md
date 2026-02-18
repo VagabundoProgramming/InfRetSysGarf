@@ -17,8 +17,6 @@ Additional Comment: This is my first time using java so I do expect this project
 
 
 - TO DO
-  - Añadir el texto a DocDict
-  - Crear un max heap
   - Search options
   - Options to modify the dataset at runtime
   - Small interface

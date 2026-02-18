@@ -11,9 +11,9 @@ public class Dictionary {
 	
 	private int minimumDegree = 0;
 	private DictionaryNode root = null;
-	private int nTerms = 0; // Unique terms in the dict
-	
+	private int nTerms = 0; // Unique terms in the
 	public Dictionary(int minimumDegree)
+
 	{
 		this.minimumDegree = minimumDegree;
 		this.root = new DictionaryNode(minimumDegree);
@@ -29,6 +29,7 @@ public class Dictionary {
 	public PostingList getPostings(String term){
 		return this.root.getPostings(term);
 	}
+
 	
 	public boolean Add(String term, float docFreq, float idf)
 	{
@@ -348,9 +349,15 @@ public class Dictionary {
 		if (this.root == null) return;
 		this.root.print();
 	}
-
+	
 	public int getnTerms() {
 		return this.nTerms; 
+	}
+	public int getMinimumDegree() {
+		return minimumDegree;
+	}
+	public DictionaryNode getRoot() {
+		return root;
 	}
 
 }

@@ -25,6 +25,10 @@ public class DocDict {
 	{
 		return this.root.search(docID);
 	}
+
+	public boolean exists(int docID){
+		return this.root.exists(docID);
+	}
 	
 	public boolean insert(int docID, int docLen, int uToknes, int nVignettes, String text)
 	{
@@ -50,7 +54,7 @@ public class DocDict {
 	// Save and load have boolean return values to see if they finish properly their execution. 
 	public boolean save(String filename){
 		try (FileWriter writer = new FileWriter(Config.Constants.mainpath + "//InformationRetrievalSystemGarfield//indexes//" + filename)){
-			writer.write(Integer.toString(nDocuments) + "\n");
+			//writer.write(Integer.toString(nDocuments) + "\n");
 			
 			Stack <DocDictNode> nodeStack = new Stack<DocDictNode>();
 			Stack <Integer> pointerStack = new Stack<Integer>();
@@ -112,9 +116,6 @@ public class DocDict {
 			char separator = ';';
 
 			tempString = reader.readLine();
-			this.nDocuments = Integer.parseInt(tempString);
-
-			tempString = reader.readLine();
 			while (tempString != null){
 
 				text = "";
@@ -124,7 +125,7 @@ public class DocDict {
 				for (j = 0; j < tempString.length(); ++j){
 					if (i < 4){
 						if (!(separator == (tempString.charAt(j))))
-							tempInt += tempInt * 10 + Integer.parseInt(tempString.substring(j, j+1));
+							tempInt = tempInt * 10 + Integer.parseInt(tempString.substring(j, j+1));
 						else{
 							temp[i] = tempInt;
 							tempInt = 0;
@@ -162,8 +163,6 @@ public class DocDict {
             BufferedReader reader = new BufferedReader (new FileReader(Constants.mainpath + "//Dataset//" + filename));
             
             String datasetLine = reader.readLine();
-            
-
             String[] tokens;
             
             int i;
@@ -200,5 +199,13 @@ public class DocDict {
 
 	public int getNDocuments() {
 		return this.nDocuments;
+	}
+
+	public DocDictNode getRoot(){
+		return this.root;
+	}
+
+	public int getMinimumDegree() {
+		return this.minimumDegree;
 	}
 }

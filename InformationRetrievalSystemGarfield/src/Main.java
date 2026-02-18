@@ -14,8 +14,9 @@ import DataStructures.MaxHeap;
 import DataStructures.PostingList;
 import DataStructures.Dictionary;
 import DataStructures.DictionaryNode;
-
+import Indexer.LiveEdit;
 import Indexer.Preprocessing;
+import Searcher.QueryProcessor;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -23,64 +24,26 @@ public class Main {
 
         //Preprocessing.rawDatasetPreprocess("garfield.txt", "garfieldProcessed.txt");
 
-
-        //Dictionary a = new Dictionary(8);
-        //a.Print();
-        //a.loadFromIndex("mainDictionary.txt");
-        //a.loadFromDataset("garfieldProcessed.txt");
-        //PostingList m = a.getPostings("you");
-        //m.Print();
-        //a.save("StupidFile.txt");
-    
-        //DocDict b = new DocDict(8);
-        //b.loadFromDataset("garfieldProcessed.txt");
-        //b.loadFromIndex("Temp.txt");
-        //b.print();
-        //b.save("Temp.txt");
-
-        MaxHeap m = new MaxHeap();
-
-        m.add(1,1);
-        m.add(9,9);
-        m.add(7,7);
-        m.add(4,4);
-
-        System.out.println(m.size());
-        m.print();
-        //m.swap(1, 3);
-        m.buildMaxHeap();
-        m.print();
+        Dictionary a = new Dictionary(Constants.treeMinDegree);
+        DocDict b = new DocDict(Constants.treeMinDegree);
         
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
-        m.pop();
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
-        m.pop();
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
+        a.loadFromDataset("garfieldProcessedMini.txt");;
+        b.loadFromDataset("garfieldProcessedMini.txt");
+        //a.loadFromIndex("dictMini.txt");
+        //b.loadFromIndex("docMini.txt");
+
+
+        LiveEdit c = new LiveEdit(a,b);
+        //c.runTimeDel(780619); // ✅
+        //c.runTimeDel(780620);
+        c.runTimeAdd(177777, "Whew  garfield garfield garfield garfield, that was a close one - BE WARRY OF THE KNIVES!! - cheese"); //✅
+        c.runTimeMod(780619, "Wow that was cute - I love cute");
+
+        c.updateIndexes("docMini.txt", "dictMini.txt");
         
-        m.pop();
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
-        m.pop();
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
-        m.pop();
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
-        m.pop();
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
-        m.pop();
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
-        m.pop();
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
-        m.pop();
-        System.out.print("Peeking: ");
-        System.out.println(m.peekID());
+        //QueryProcessor processor = new QueryProcessor(a,b);
+
+        //processor.Proccess("t:garfield and not and  t:mouse");
         
     
     }

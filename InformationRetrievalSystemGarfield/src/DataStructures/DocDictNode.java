@@ -82,6 +82,22 @@ public class DocDictNode {
 		else
 			return this.children[i].search(k);
 	}
+
+	public boolean exists(int k)
+	{
+		int i = 0;
+		
+		while (i < this.n && this.docID[i] < k)
+			++i;
+		
+		if (i < this.n && this.docID[i] == k)
+			return true;
+		else if (this.leaf == true)
+			return false;
+		else
+			return this.children[i].exists(k);
+	
+	}
 	
 	private void split(int i)
 	{

@@ -40,6 +40,8 @@ public class Preprocessing {
     public static String[] generalTokenizeStrings(String rawText){ // Takes one string, mostly because i cannot figure Arrays of arraylists
         ArrayList<String> tokens = new ArrayList<>();
         
+        rawText = rawText.toLowerCase() + " ";
+
         String holder = "";
         for(int c = 0; c < rawText.length(); ++c){
             //if (!"".equals(holder) && isLetter(rawText.charAt(c) == ' ' || rawText.charAt(c) == '-')){
@@ -131,6 +133,10 @@ public class Preprocessing {
             if (token.equals(tokens[i])) output.add(i);
         }
         return output;
+    }
+
+    public static String PreprocessWord(String word){
+        return PorterStemmer.Stem(wordSquishing(word.toLowerCase()));
     }
 }
 
