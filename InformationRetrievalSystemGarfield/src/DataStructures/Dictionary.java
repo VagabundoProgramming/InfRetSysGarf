@@ -22,7 +22,6 @@ public class Dictionary {
 	
 	public Object[] Search(String term)
 	{
-		//System.out.println("Searching for term [ " + term + " ]");
 		return this.root.Search(term);
 	}
 
@@ -92,8 +91,8 @@ public class Dictionary {
 				tempPL = curr.getPostings(index/2);
 
 				docFreq = (float) tempPL.lenght() / nDocs;
-				idf = (float) Math.log(nDocs/tempPL.lenght()); // i dont think we need doubles
-				
+				idf = (float) Math.log((float) nDocs / tempPL.lenght());
+
 				curr.setDocFreq(docFreq, index/2);
 				curr.setIdf(idf, index/2);
 				
@@ -259,13 +258,14 @@ public class Dictionary {
 					if (Character.isDigit(tempChar)){
 						tempInt = tempInt * 10 + (tempChar - '0');
 					} else {
-						if (tempChar != ' ')
-							termPos.add(tempInt);
+						termPos.add(tempInt);
 						tempInt = 0;
+						docIndex += 1;
 					}
 					docIndex += 1;
 				}
 				termPos.add(tempInt);
+				tempInt = 0;
 
 				this.Add2Posting(term, docId, termCount, termFreq, tf_idf, termPos);
 				docIndex += 4; // Space between end of relevant data of a posting and the next
@@ -298,7 +298,6 @@ public class Dictionary {
             int i;
 			while (datasetLine != null){ // Read Doc 1 by 1.
                 docID = Integer.parseInt(datasetLine.substring(2,8));
-                //System.out.print(docID+" ");
                 if (datasetLine.length() > 11)
                     datasetLine = datasetLine.substring(12).toLowerCase();
 
@@ -321,6 +320,12 @@ public class Dictionary {
                     termCount = Indexer.Preprocessing.termCount(tokens[i], tokens);
                     termFreq = (float) termCount / docLen;
                     termPos = Indexer.Preprocessing.termPos(tokens[i], tokens);
+					System.out.println(tokens[i]);
+					for (int k = 0; k < termPos.size(); ++k){
+						System.out.print(termPos.get(k));
+						System.out.print("\n");
+					}
+					System.out.println();
 
                     // Añadir nodo al diccionario SIN datos globales (LUEGO)
                     this.Add(tokens[i], 0, 0); 

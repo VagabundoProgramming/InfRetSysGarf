@@ -28,14 +28,10 @@ public class LiveEdit {
         this.liveDictionary = new Dictionary(Constants.treeMinDegree);
         this.liveDocDict = new DocDict(Constants.treeMinDegree);
         this.deletedDocs = new ArrayList<Integer>();
-    
-    
-        this.currDocDict.print();
     }
 
 
     public void runTimeAdd(int docID, String text){
-        System.out.println("KOWABUNGA");
         if (this.liveDocDict.exists(docID)) return;
         if (this.currDocDict.exists(docID) && !isDocDeleted(docID)) return;
 
@@ -48,10 +44,8 @@ public class LiveEdit {
         int docLen = tokens.length;
         int nUTokens = Preprocessing.nUTokens(tokens);
         int nVignettes = Preprocessing.nVignettes(text);
-        System.out.println(docLen);
-        for (int i = 0; i < docLen; ++i) System.out.print(tokens[i] + " ");
-        System.out.println();
-        this.liveDocDict.insert(docID, docLen, nUTokens, nVignettes, text); // HECHO
+        
+		this.liveDocDict.insert(docID, docLen, nUTokens, nVignettes, text); // HECHO
 
         int termCount;
         float termFreq;
@@ -334,6 +328,23 @@ public class LiveEdit {
         updateDocDict(filenameDocDict);
         updateDictionary(filenameDict);
     }
+
+	public Dictionary getCurrDictionary() {
+		return currDictionary;
+	}
+	public DocDict getCurrDocDict() {
+		return currDocDict;
+	}
+	public Dictionary getLiveDictionary() {
+		return liveDictionary;
+	}
+	public DocDict getLiveDocDict() {
+		return liveDocDict;
+	}
+	public ArrayList<Integer> getDeletedDocs() {
+		return deletedDocs;
+	}
+	
 
 }
 

@@ -18,8 +18,8 @@ Additional Comment: This is my first time using java so I do expect this project
 
 - TO DO
   - Search options
-  - Options to modify the dataset at runtime
-  - Small interface
+    - Multiword (in progress)
+  - Interface
 
 // Deleted / Modified nodes arent direclty removed from the datastructures, but when saving changes, the saved documents should not include them, when searching additional trees will be used to avoid older versions. Yeah?
 

@@ -2,19 +2,17 @@ package Searcher;
 
 import java.util.ArrayList;
 
-import DataStructures.Dictionary;
-import DataStructures.DocDict;
 import DataStructures.MaxHeap;
 import Indexer.Preprocessing;
 
 public class QueryProcessor {
     
     MaxHeap maxHeap;
-    Search searcher;
+    Seeker searcher;
 
-    public QueryProcessor(Dictionary termDict, DocDict docDict){
+    public QueryProcessor(Seeker seekerObj){
         maxHeap = new MaxHeap();
-        searcher = new Search(termDict, docDict);
+        searcher = seekerObj; // We will use it to search
     }
 
 

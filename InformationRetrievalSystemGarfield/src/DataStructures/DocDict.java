@@ -208,4 +208,23 @@ public class DocDict {
 	public int getMinimumDegree() {
 		return this.minimumDegree;
 	}
+
+
+	public int getMinId(){ // Which is the date
+		DocDictNode temp = this.root;
+
+		while (temp.getChildren(0) != null){
+			temp = temp.getChildren(0);
+		}
+		return temp.getDocId(0);
+	}
+
+	public int getMaxId(){
+		DocDictNode temp = this.root;
+
+		while (temp.getChildren(0) != null){
+			temp = temp.getChildren(temp.getN()-1);
+		}
+		return temp.getDocId((temp.getN()-1));
+	}
 }
