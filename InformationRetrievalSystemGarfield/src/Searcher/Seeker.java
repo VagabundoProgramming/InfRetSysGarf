@@ -272,6 +272,7 @@ public class Seeker {
     }
 
     public Object[] searchDay(String day){
+        System.out.println(day);
         int dayWeek = Integer.parseInt(day);
         if (0 > dayWeek || dayWeek > 8) return null;
         if (dayWeek == 7) dayWeek = 1; // To align with Calendar.DAY_OF_WEEK
@@ -287,8 +288,7 @@ public class Seeker {
 		Stack <Integer> pointerStack = new Stack<Integer>();
 
         // First search the disk 
-        System.out.println("Searching in disk memory");
-		nodeStack.add(this.liveEditObj.getLiveDocDict().getRoot());
+        nodeStack.add(this.liveEditObj.getLiveDocDict().getRoot());
 		pointerStack.add(0);
 		while (!nodeStack.isEmpty()) {
 			DocDictNode curr = nodeStack.peek();
@@ -325,7 +325,6 @@ public class Seeker {
 			}
         }
 
-        System.out.println("Searching in memory");
         nodeStack.add(this.liveEditObj.getCurrDocDict().getRoot());
 		pointerStack.add(0);
 
@@ -406,12 +405,16 @@ public class Seeker {
     public Object[] searchString(String query){ // s:"some tokens here"
         String[] tokens = Preprocessing.generalTokenizeStrings(query.substring(1, query.length()-1));
         int len = tokens.length; 
+
+        if (len == 1)
+            return searchTerm(tokens[0]);
+
         PostingList[] postingsMem = new PostingList[len];
-        //PostingList[] postingsDisk = new PostingList[len];
+        PostingList[] postingsDisk = new PostingList[len];
         PostingListNode[] postings = new PostingListNode[len];
-        ArrayList[] termPos = new ArrayList[len]; // Not the most 
-        boolean passes;
-        int startingIndex;
+        
+        @SuppressWarnings("rawtypes") // Im sorry for this
+        ArrayList[] termPos = new ArrayList[len];  
 
         ArrayList<Integer> docIDs = new ArrayList<Integer>();
         ArrayList<Float> scores = new ArrayList<Float>();
@@ -419,41 +422,68 @@ public class Seeker {
         for (int i = 0; i < len; i++){
             tokens[i] = Indexer.PorterStemmer.Stem(Indexer.Preprocessing.wordSquishing(tokens[i]));
             postingsMem[i] = this.liveEditObj.getCurrDictionary().getPostings(tokens[i]); 
-            //postingsDisk[i] = this.liveEditObj.getCurrDictionary().getPostings(tokens[i]);
+            postingsDisk[i] = this.liveEditObj.getLiveDictionary().getPostings(tokens[i]);
             termPos[i] = new ArrayList<Integer>();
         }
-        for (int i = 0; i < tokens.length; ++i)
-            System.out.println(tokens[i]);
-
 
         int minID;
         int minIndex;
-        boolean checks;
+        int checks;
         int refIndex;    
 
         // Check first the disk if it has postings for all the words
-        if (isFull(postingsMem)){
-            for(int i = 0; i < postingsMem.length; ++i)
-                postings[i] = postingsMem[i].getRoot();
-
+        if (isFull(postingsDisk)){
+            for(int i = 0; i < postingsDisk.length; ++i)
+                postings[i] = postingsDisk[i].getRoot();
             
             while (isFull(postings)){
-                if (sameDocId(postings) && !this.liveEditObj.isDocDeleted(postings[0].getDocId())){
-                    checks = true;
+                if (sameDocId(postings)){
+                    checks = 0;
                     for (int j = 0; j < postings[0].getTermCount(); ++j){
                         refIndex = postings[0].getTermPos().get(j);
                         for (int k = 1; k < len; ++k){
-                            if (!(containsN(postings[k].getTermPos(), refIndex + k))) checks = false;
+                            if (containsN(postings[k].getTermPos(), refIndex + k)) checks += 1;
                         }
                     }
 
-                    if (checks){
+                    if (checks > 0){
                         docIDs.add(postings[0].getDocId());
-                        scores.add((float) 1);
+                        scores.add((float) checks);
+                    }
+                }
+
+                // This altought, not very efficiently, allows for advancing through the postings.
+                minID = postings[0].getDocId();
+                minIndex = 0;
+                for (int j = 1; j < postings.length; ++j){
+                    if (minID > postings[j].getDocId()){
+                        minID = postings[j].getDocId();
+                        minIndex = j;
+                    }
+                }
+                postings[minIndex] = postings[minIndex].getNext(); 
+            }
+        }
+        
+        // Check the memory from the main dictionary
+        if (isFull(postingsMem)){
+            for(int i = 0; i < postingsMem.length; ++i)
+                postings[i] = postingsMem[i].getRoot();
+            
+            while (isFull(postings)){
+                if (sameDocId(postings) && !this.liveEditObj.isDocDeleted(postings[0].getDocId())){
+                    checks = 0;
+                    for (int j = 0; j < postings[0].getTermCount(); ++j){
+                        refIndex = postings[0].getTermPos().get(j);
+                        for (int k = 1; k < len; ++k){
+                            if (containsN(postings[k].getTermPos(), refIndex + k)) checks += 1;
+                        }
                     }
 
-                    // Calculate if they match
-                        // Add them to the score and docIDS
+                    if (checks > 0){
+                        docIDs.add(postings[0].getDocId());
+                        scores.add((float) checks);
+                    }
                 }
 
                 // This altought, not very efficiently, allows for advancing through the postings.
@@ -472,77 +502,13 @@ public class Seeker {
         Object[] output = new Object[]{docIDs, scores}; // Array of docIDs, Array of scores
         return output;
             
-            
-            /* 
-            
-                if (!sameDocId(positings)){
-
-                }
-
-            int min;
-            int minInd;
-            while (isFull(positings)){
-
-
-
-                for (int i = 0; i < len; ++i)
-                    termPos[i] = positings[i].getTermPos();
-
-                    System.out.println("Postings");
-                    for (int i = 0; i < len; ++i){
-                        for (int j = 0; j < termPos[i].size(); ++j){
-                            System.out.print(termPos[i].get(j));
-                            System.out.print(" ");
-                        }
-                        System.out.println("");
-                    }
-                    
-
-                if (sameDocId(positings)){
-                    for (int i = 0; i < termPos[0].size(); ++i){
-                        passes = true;
-                        startingIndex = (int) termPos[0].get(i);
-                        for (int j = 1; j < len; ++j){
-                            if (!(containsN(termPos[j], startingIndex+j))) passes = false;
-                        }
-
-                        if (passes){
-                            docIDs = new ArrayList<Integer>();
-                            scores = new ArrayList<Float>();
-
-
-                            // Add stuff to the output
-                        }
-                    }
-                }
-
-                //min = postings;
-                for (int i = 1; i < len; ++i){
-                    
-                }
-
-
-                // Advance the lowest one?
-            
-            
-            }
-
-            
-            //postingsDisk[0].getRoot();
-        }
-
-
-
-
-        for (int i = 0; i < tokens.length;++i){
-            System.out.println(tokens[i]);
-            
-        }
-            */
-
-
     }
 
+    public LiveEdit getLiveEditObj() {
+        return liveEditObj;
+    }
 }
+
+
 
 

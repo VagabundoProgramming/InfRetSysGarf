@@ -4,3 +4,5 @@ InformationRetrievalSystemGarfield/src/subMain.java
 InformationRetrievalSystemGarfield/src/Indexer/oldMain.txt
 InformationRetrievalSystemGarfield/src/Indexer/oldMain2.txt
 Dataset/garfieldProcessedMini.txt
+InformationRetrievalSystemGarfield/indexes/docDictMini.txt
+InformationRetrievalSystemGarfield/indexes/dictMini.txt

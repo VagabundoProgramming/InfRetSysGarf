@@ -3,144 +3,170 @@ package Searcher;
 import java.util.ArrayList;
 
 import DataStructures.MaxHeap;
-import Indexer.Preprocessing;
 
 public class QueryProcessor {
     
-    MaxHeap maxHeap;
-    Seeker searcher;
-
-    public QueryProcessor(Seeker seekerObj){
-        maxHeap = new MaxHeap();
-        searcher = seekerObj; // We will use it to search
+    
+    public QueryProcessor(){
+        //maxHeap = new MaxHeap(); // Creo q no hara falta
+        //searcher = seekerObj; // We will use it to search
     }
 
-
-    public boolean reviseQuery(ArrayList<Object> pQuery, ArrayList<Object> pScores){
-
-        int bracketCounter[] = {0,0};
-        Object temp = null;
-
-        for (int i = 0; i < pQuery.size(); ++i){
-            temp = pQuery.get(i);
-
-            if (temp instanceof String){
-                System.out.println(temp);
-
-                if (temp.equals("(")) bracketCounter[0] += 1;
-                else if (temp.equals(")")){
-                    bracketCounter[1] += 1;
-                    if (bracketCounter[0] > bracketCounter[1]) 
-                        return false;
-                } 
-                else if (temp.equals("not")){
-                    if (i+1 > pQuery.size()) return false;
-                    if (pQuery.get(i+1) instanceof String && !(pQuery.get(i+1).equals("("))) return false;
-                }
-                else{
-                    if (i-1 < 0) return false;
-                    if (pQuery.get(i-1) instanceof String) return false;
-                    if (i+1 > pQuery.size()) return false;
-                    if (pQuery.get(i+1) instanceof String && !(pQuery.get(i+1).equals("not"))) return false;
-                }
-
-            }
-
-        }
-
-        if (bracketCounter[0] != bracketCounter[1]) return false;
-        return true;
-    }
-
-    public void Proccess(String query){
-        ArrayList<Object> pQuery = new ArrayList<Object>();
-        ArrayList<Object> pScores = new ArrayList<Object>();
-        String holder = "";
-        String prev = null;
-        char currChar;
-        Object searchResult[];
-        String token;
-        // t:token
-        // d:date
-        // d:day
-        // s:"string of tokens"
-
-        query += " ";
-
-        for (int queryPointer = 0; queryPointer < query.length(); ++queryPointer){
-            currChar = query.charAt(queryPointer);
-
-            System.out.println(holder);
-
-            if (currChar == ' ' || currChar == '(' || currChar == ')' ){
-                System.out.println("DO we get here?");
-                if (currChar == '('){
-                    if (prev == "postings"){
-
-                    }
-                    pQuery.add("(");
-                    pScores.add("(");
-                }
-                else if (currChar == ')'){
-                    pQuery.add(")");
-                    pScores.add(")");
-                }
-                System.out.println(holder.substring(0,2));
-                if (holder.length() > 2 && holder.substring(0, 2).equals("t:")){
-                    
-                    token = Preprocessing.PreprocessWord(holder.substring(2).toLowerCase());
-                    System.out.print("Searching postings for { " + token + " }");
-                    searchResult = searcher.searchTerm(token);
-                    pQuery.add((ArrayList<Integer>) searchResult[0]);
-                    pScores.add((ArrayList<Float>) searchResult[1]); // Im gonna use tf_idf for the moment
-                }
-                else if (holder.equals("and")){
-                    pQuery.add("and");
-                    pScores.add("and");
-                }
-                else if (holder.equals("or")){
-                    pQuery.add("or");
-                    pScores.add("or");    
-                }
-                else if (holder.equals("xor")){
-                    pQuery.add("xor");
-                    pScores.add("xor");
-                }
-                else if (holder.equals("nand")){
-                    pQuery.add("nand");
-                    pScores.add("nand");
-                } 
-                else if (holder.equals("not")){
-                    pQuery.add("not");
-                    pScores.add("not");
-                    
-                }
-                holder = "";
-            }
-            
-            holder += currChar;
-            
-        }
-
-        // Delete extra nots
-        Object temp = null;
-        for (int i = 0; i < pQuery.size(); ++i){
-            if (temp != null && temp.equals("not") && pQuery.get(i).equals("not")){
-                pQuery.remove(i);
-                pScores.remove(i);
-                i--;
-            }
-        }
-
-        if (!(reviseQuery(pQuery, pScores))){
-            System.out.println("The query is not formated properly.");
-            return;
-        }
-
-
+    // Revises that the query makes sense and edits it so the following code is easier.
+    public String[] reviseEditQuery(String[] arguments){
+        ArrayList<String> preOutput = new ArrayList<String>();
+        int prev = 0;  // 0 means comparator (& or |)  1 means a search 
         
+        //String comparators[] = {"|","&"}  // Does nothing, is just to remember which are the current supported comparators (or, and)
 
-        return;
+        for (int i = 0; i < arguments.length; ++i){
+            //System.out.println(prev);
+            //System.out.println(arguments[i]);
+
+            if (i == 0){
+                if (arguments[i].equals("|") || arguments[i].equals("&")){
+                    System.out.println("First query element cannot be a comparator. [ " + arguments[i] + " ]");
+                    return null;
+                }
+                preOutput.add(arguments[i]);
+                prev = 1;
+            }
+            
+            if (i != 0){
+                if (!(arguments[i].equals("|") || arguments[i].equals("&")) && prev == 1){ // Additional and
+                    preOutput.add("&");
+                }
+                if ((arguments[i].equals("|") || arguments[i].equals("&")) && prev == 0){
+                    System.out.println("Comparator followed by another comparator, please remove one of them");
+                    return null;
+                }
+
+                if (arguments[i].equals("|") || arguments[i].equals("&")) prev = 0;
+                else prev = 1;
+                preOutput.add(arguments[i]);
+            }
+        }
+
+        String output[] = new String[preOutput.size()];
+        for (int i = 0; i < preOutput.size(); ++i){
+            output[i] = preOutput.get(i);
+        }
+        return output;
+    }
+
+    
+
+    public Object[] getIDandScores(String subQuery, Seeker seeker){
+        Object output[] = null;
+
+        boolean applyNot = false;
+        int index = 0;
+
+        if(subQuery.substring(0,1).equals("-")){
+            applyNot = true;
+            index +=1;
+        }
+        if (subQuery.substring(index, index+2).equals("t:"))
+            output = seeker.searchTerm(subQuery.substring(index+2));
+
+        else if (subQuery.subSequence(index, index+2).equals("d:"))
+            output = seeker.searchDate(subQuery.substring(index+2));
+
+        else if (subQuery.subSequence(index, index+2).equals("w:")){
+            output = seeker.searchDay(subQuery.substring(index+2));
+        }
+        else if (subQuery.subSequence(index, index+2).equals("s:"))
+            output = seeker.searchString(subQuery.substring(index+2));
+
+        else
+            output = seeker.searchTerm(subQuery.substring(index));
+
+        if (output == null){
+            System.out.println("Subquery [ " + subQuery + " ] could not be processed");
+            return null;
+        }
+
+        if (applyNot){
+            ArrayList<Integer> ids = (ArrayList<Integer>) output[0];
+            output = Searcher.Operators.Not(ids, seeker.getLiveEditObj());
+        }
+
+        return output;
+    }
+
+    private String[] querrySplitter(String query){
+        
+        ArrayList<String> subQueries = new ArrayList<String>();
+        String holder = "";
+        boolean insideSub = false;
+        
+        query = query.toLowerCase() + " ";
+
+        for (int i = 0; i < query.length(); ++i){
+            if (query.charAt(i) == '\"'){
+                if (insideSub)
+                   insideSub = false;
+                else
+                    insideSub = true; 
+            }
+
+            if (!"".equals(holder) && !Character.isLetterOrDigit(query.charAt(i))  && query.charAt(i)!=':' && query.charAt(i)!='/' && query.charAt(i)!='*' && !insideSub){
+                if (query.charAt(i) == '"')
+                    holder += '"';
+
+                subQueries.add(holder);
+                holder = "";
+            } 
+            
+            else if (query.charAt(i)!=' ') {
+                holder+=query.charAt(i);
+            } 
+            else if (query.charAt(i)==' ' && insideSub)
+                holder += ' ';
+        }
+
+        String output[] = new String[subQueries.size()];
+        for (int i = 0; i < subQueries.size(); ++i){
+            output[i] = subQueries.get(i);
+        }
+        return output;
+    }
+
+    // Query in the shape of "t:Oddie & d:**/**/2004 & -t:Jon"
+    public MaxHeap Proccess(String query, Seeker seeker){
+        ArrayList<Integer> tempIds; // = new ArrayList<Integer>();
+        ArrayList<Float> tempScores; // = new ArrayList<Float>();
+        Object outHolder[];
+        Object holder[];
+
+        String[] qSplited = querrySplitter(query);//query.split(" "); // NO es correcto
+        String[] qProcessed = reviseEditQuery(qSplited);
+
+        outHolder = getIDandScores(qProcessed[0], seeker);
+        
+        for (int i = 2; i < qProcessed.length; i+=2){
+            holder = getIDandScores(qProcessed[i], seeker);
+            
+            if (qProcessed[i-1].equals("|"))
+                outHolder = Searcher.Operators.Or(outHolder, holder);
+            else if (qProcessed[i-1].equals("&"))
+                outHolder = Searcher.Operators.And(outHolder, holder);
+            else {
+                System.out.println("Operator not recognised");
+                return null;
+            }
+        }
+
+        tempIds = (ArrayList<Integer>) outHolder[0];
+        tempScores = (ArrayList<Float>) outHolder[1];
+
+        MaxHeap maxHeap = new MaxHeap();
+        for (int i = 0; i < tempIds.size(); i++){
+            maxHeap.add(tempIds.get(i), tempScores.get(i));    
+        }
+        maxHeap.buildMaxHeap();
+
+        return maxHeap;
     }
 
 

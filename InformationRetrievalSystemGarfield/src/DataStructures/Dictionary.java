@@ -320,13 +320,7 @@ public class Dictionary {
                     termCount = Indexer.Preprocessing.termCount(tokens[i], tokens);
                     termFreq = (float) termCount / docLen;
                     termPos = Indexer.Preprocessing.termPos(tokens[i], tokens);
-					System.out.println(tokens[i]);
-					for (int k = 0; k < termPos.size(); ++k){
-						System.out.print(termPos.get(k));
-						System.out.print("\n");
-					}
-					System.out.println();
-
+					
                     // Añadir nodo al diccionario SIN datos globales (LUEGO)
                     this.Add(tokens[i], 0, 0); 
 

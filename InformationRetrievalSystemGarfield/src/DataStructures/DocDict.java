@@ -227,4 +227,16 @@ public class DocDict {
 		}
 		return temp.getDocId((temp.getN()-1));
 	}
+
+	public String getTextfrom(int id){
+		Object holder[] = this.search(id);
+
+		if (holder == null)
+			return "";
+
+		DocDictNode temp = (DocDictNode) holder[0];
+		int i = (int) holder[1];
+
+		return temp.getText(i);
+	}
 }

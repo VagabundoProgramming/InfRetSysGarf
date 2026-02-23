@@ -345,6 +345,19 @@ public class LiveEdit {
 		return deletedDocs;
 	}
 	
+	public String getDocText(int docID){
+		String output = this.liveDocDict.getTextfrom(docID);
+
+		if (output != null && !output.isEmpty())
+			return output;
+
+		output = this.currDocDict.getTextfrom(docID);
+
+		if (output != null && !output.isEmpty() && !isDocDeleted(docID))
+			return output;
+
+		return "";
+	}
 
 }
 
