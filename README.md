@@ -55,10 +55,7 @@ Due to time constraints I will not solve them for the time being but I will list
 
 1. Better File Management of the Project
 2. Parenthesis Support for Queries
-3. More & better Datastructures to support complex searches
-  1. N-vignettes
-  2. Proximity
-  3. Star queries
+3. More & better Datastructures to support complex searches (N-vignettes, proximity, star queries)
 4. Dataset partitions 
 5. Improved file storing and retrieval
 6. Use of cleaner code
